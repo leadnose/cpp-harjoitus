@@ -64,6 +64,11 @@ namespace jpr {
         check();
     }
 
+    size_t String::size() const
+    {
+        return m_used;
+    }
+
     String & String::operator= (const String & other)
     {
         if (this != &other) {
@@ -189,33 +194,24 @@ namespace jpr {
     {
 
         s = String(); // clear the string like std::string's operator>> does
-        
-        for (;;) {
-            int ch = is.get();
-            if (EOF == ch) {
-                // puts("EOF1");
-                return is;
-            } else if (isspace(ch)) {
-                // puts("SPACE1");
+
+        char ch;
+
+        while (is >> ch) {
+            if (isspace(ch)) {
                 continue;
             } else {
-                // printf("PUSH_BACK1: %c\n", ch);                
-                s.push_back(ch);
-                for (;;) {
-                    ch = is.get();
-                    if (EOF == ch) {
-                        // puts("EOF2");
-                        return is;
-                    } else if (isspace(ch)) {
-                        // puts("SPACE2");
-                        return is;
+                while (is >> ch) {
+                    if (isspace(ch)) {
+                        break;
                     } else {
-                        // printf("PUSH_BACK2: %c\n", ch);
                         s.push_back(ch);
                     }
                 }
-            }
+                return is;
+            }           
         }
+        return is;
     }
 
     // iterator implementation

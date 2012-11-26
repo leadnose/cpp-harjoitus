@@ -52,8 +52,18 @@ void check_non_equal(const T& t1, const T& t2)
     if (t1 != t2) {
         return;
     } else {
-        throw std::logic_error("check_equal() failed");
+        throw std::logic_error("check_non_equal() failed");
     }
+}
+
+static
+void size_test()
+{
+    String s0;
+    check_equal(s0.size(), 0ul);
+
+    String s4("asdf");
+    check_equal(s4.size(), 4ul);
 }
 
 static
@@ -200,12 +210,12 @@ void input_operator_test()
 
     std::stringstream ss("asdf xcvb qwer hjkl");
 
-    while (true) {
-        ss >> s;
+    while (ss >> s) {
         strings.push_back(s);
-        if (ss.eof()) {
-            break;
-        }
+    }
+
+    for (auto it = strings.begin(); it != strings.end(); ++it) {
+        std::cout << *it << std::endl;
     }
 
     std::vector<String> cmp = {"asdf", "xcvb", "qwer", "hjkl"};
@@ -229,12 +239,48 @@ void iterator_test1()
     }
 }
 
+static
+void iterator_test2()
+{
+    String s;
+    String::iterator it = s.begin();
+
+    try {
+        char c = *it;
+        (void) c;
+    } catch (const std::logic_error & e) {
+        return;
+    }
+
+    throw std::logic_error("dereferencing the iterator should've failed");
+}
+
+static
+void iterator_test3()
+{
+    String s("a");
+    String::iterator it = s.begin();
+
+    try {
+        it++;
+        char c = *it;
+        (void) c;
+    } catch (const std::logic_error & e) {
+        return;
+    }
+
+    throw std::logic_error("dereferencing the iterator should've failed");
+}
+
+
+
 #define TEST(f) std::make_pair(f, #f)
 
 std::vector<std::pair<testfun, std::string>> tests =
     {TEST(default_constructor_test),
      TEST(cstring_constructor_test1),
      TEST(cstring_constructor_test2),
+     TEST(size_test),
      TEST(equality_test1),
      TEST(equality_test2),
      TEST(assignment_test),
@@ -245,7 +291,9 @@ std::vector<std::pair<testfun, std::string>> tests =
      TEST(pop_back_test),
      TEST(swap_test),
      TEST(input_operator_test),
-     TEST(iterator_test1)};
+     TEST(iterator_test1),
+     TEST(iterator_test2),
+     TEST(iterator_test3)};
 
 #undef TEST
 

@@ -29,6 +29,8 @@ namespace jpr
         String & operator= (const String & other);
         // destructor
         ~String();
+        // size()
+        size_t size() const;
         // equality comparison
         bool operator==(const String& other) const;
         // non-equality
