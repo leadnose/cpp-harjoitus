@@ -1,0 +1,64 @@
+(a) Explain the relationship between C and C++? Historically, what are
+their origins and motivations? How are they related as programming
+languages? Can a source file be both C and and C++ program? How/why
+not? Can a source file be a C program but not a C++ program? Give an
+example/explain why not.
+
+- C++ retains the basic computational model of C: native, no virtual machine, no garbage collection, no checking etc
+- C++ is (mostly) backwards compatible with C, can use C libraries etc.
+- C was originally derived from BCPL to re-write UNIX in a portable manner
+ - "portable assembly"
+- C++ is derivative of C and incorporates ideas from other languages (OO, Generics, etc)
+- source file can be both C++ and C program
+ - not all C programs are valid C++ programs (e.g. casting of void*, new reserved words etc)
+
+ - e.g.
+   ----
+   #include <stdlib.h> /* for malloc */
+   
+   int main(int argc, char **argv) {
+       char *buf = (char*)malloc(10);
+       return 0;
+   }
+   ---- is valid in both
+
+   but
+   ----
+   #include <stdlib.h> /* for malloc */
+
+   int main(int argc, char **argv) {
+       char *buf = malloc(10);
+   }
+   ---- is only valid in C because you can't cast void* (return type of malloc) implicitly to char *
+
+(b) Why have so much of the old C and its unsafe features been kept as
+part of C++? For example, a great many languages provide default
+run-time checking of index bounds. So, why is C++ still missing
+guaranteed index checks for arrays and vectors? Find out whether C++
+checks vector indices in any circumstances.
+
+- C++ has the philosophy of "you only pay for what you use" when it comes to performance (speed, memory use)
+- C++ checks vector bounds when you use .at() method of vector, and some implementations check bounds in debug mode
+
+
+(c) What is an unsafe type conversion in C++? Give examples. How can
+we decide if a conversion from one type to another is safe or unsafe?
+Or can we?
+
+- { int i = MAX_INT; char c = i; }
+- we can only know if we know about the platform and sizes of the types
+
+
+(d) Generally speaking, what is type safety and why is it important?
+What is meant by a strongly typed programming language? (Not to be
+confused with static typing as many sources do.) Explore the type
+system of the C++ programming language. Are C++ programs type safe? Is
+C++ a strongly typed programming language? Compare the type safety of
+C++ to other programming languages that you know. Discuss both static
+and dynamic type safety.
+
+- type safety helps in writing correct programs
+- strongly typed means that operations are only applied to correct types, e.g. no multiplication of strings etc.
+- C++ programs are not type safe
+- C++ is not strongly typed
+
