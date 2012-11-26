@@ -193,27 +193,29 @@ namespace jpr {
         for (;;) {
             int ch = is.get();
             if (EOF == ch) {
+                // puts("EOF1");
                 return is;
             } else if (isspace(ch)) {
+                // puts("SPACE1");
                 continue;
             } else {
+                // printf("PUSH_BACK1: %c\n", ch);                
                 s.push_back(ch);
                 for (;;) {
                     ch = is.get();
                     if (EOF == ch) {
+                        // puts("EOF2");
+                        return is;
+                    } else if (isspace(ch)) {
+                        // puts("SPACE2");
                         return is;
                     } else {
-                        if (isspace(ch)) {
-                            return is;
-                        } else {
-                            s.push_back(ch);
-                        }
+                        // printf("PUSH_BACK2: %c\n", ch);
+                        s.push_back(ch);
                     }
                 }
             }
         }
-
-
     }
 
     // iterator implementation

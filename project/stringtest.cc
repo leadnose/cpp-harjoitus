@@ -4,6 +4,8 @@
 #include <iostream>
 #include <utility>
 #include <string>
+#include <sstream>
+
 #include "string.hh"
 
 typedef void(*testfun)();
@@ -196,18 +198,19 @@ void input_operator_test()
 
     String s;
 
-    std::cout << "please input strings on separate lines, when dones, send EOF" << std::endl;
+    std::stringstream ss("asdf xcvb qwer hjkl");
 
-    while (std::cin >> s) {
-        puts(">");
+    while (true) {
+        ss >> s;
         strings.push_back(s);
+        if (ss.eof()) {
+            break;
+        }
     }
 
-    std::cout << "you entered the following strings (" << strings.size() << ")" << std::endl;
+    std::vector<String> cmp = {"asdf", "xcvb", "qwer", "hjkl"};
+    check_equal(strings, cmp);
 
-    for (size_t i = 0; i < strings.size(); i++) {
-        std::cout << strings[i] << std::endl;
-    }
 }
 
 static
@@ -216,7 +219,7 @@ void iterator_test1()
     const char *cstr = "qwerty";
     String s = cstr;
 
-    jpr::String::iterator it = s.begin();
+    String::iterator it = s.begin();
     size_t i = 0;
 
     while (it != s.end()) {
@@ -224,12 +227,6 @@ void iterator_test1()
         ++it;
         ++i;
     }
-}
-
-static
-void this_test_fails()
-{
-    throw std::logic_error("this test failed like it should");
 }
 
 #define TEST(f) std::make_pair(f, #f)
@@ -248,8 +245,7 @@ std::vector<std::pair<testfun, std::string>> tests =
      TEST(pop_back_test),
      TEST(swap_test),
      TEST(input_operator_test),
-     TEST(iterator_test1),
-     TEST(this_test_fails)};
+     TEST(iterator_test1)};
 
 #undef TEST
 
@@ -270,4 +266,10 @@ int main()
     }
 
     std::cout << "Ran " << tests.size() << " tests, " << successes << " successes, " << failures << " failures." << std::endl;
+
+    if (failures) {
+        exit(EXIT_FAILURE);
+    } else {
+        exit(EXIT_SUCCESS);
+    }
 }

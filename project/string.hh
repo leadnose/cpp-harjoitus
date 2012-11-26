@@ -17,12 +17,13 @@ namespace jpr
     public:
         // validity-check
         void check() throw (InvalidStringException);
+        // for debugging
         void dump_state(std::ostream &os = std::cerr);
         // default constructor
         String();
         // copy constructor
         String(const String &other);
-        // constructor from C-string, which must be null-terminated
+        // constructor from C-string, which must be null-terminated, and may be deallocated after the call if necessary
         String(const char *cstr);
         // assignment
         String & operator= (const String & other);
@@ -73,5 +74,7 @@ namespace jpr
     private:
         size_t m_bufsize, m_used;
         char* m_buf;
+        
     }; // class String
+    
 } // namespace jpr
