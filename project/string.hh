@@ -65,13 +65,13 @@ namespace jpr
         String& insert ( size_t pos1, size_t n, char c );
         
         // Inserts a copy of character c at the position referred by iterator p and returns an iterator referring to this position where it has been inserted.
-        iterator insert ( iterator p, char c );
+        // iterator insert ( iterator p, char c );
         
         // Inserts a string formed by the repetition of character c, n times, at the position referred by iterator p.
-        void insert ( iterator p, size_t n, char c );
+        // void insert ( iterator p, size_t n, char c );
         
         // Inserts at the internal position referred by p the content made up of the characters that go from the element referred by iterator first to the element right before the one referred by iterator last. 
-        template<class InputIterator> void insert (iterator p, InputIterator first, InputIterator last);
+        // template<class InputIterator> void insert (iterator p, InputIterator first, InputIterator last);
         
 
         class iterator
@@ -96,9 +96,36 @@ namespace jpr
             size_t m_index;
         }; // class String::iterator
 
+        class const_iterator
+        {
+            friend class String; // so that String may use the ctor
+            
+        private:
+            // this can be called from String::begin(), ::end() etc. but arbitrary indexes can't be used
+            const_iterator(const String & string, size_t index); // TODO: make it so that the type of index is signed, and that it's maximum positive value is >= maxvalue of size_t?
+        public:
+            // all the operations will throw a std::logic_error if they detect
+            // that you're doing something that doesn't make sense
+            const_iterator operator++() throw (std::logic_error);
+            const_iterator operator++(int) throw (std::logic_error);
+            const char & operator*() const throw (std::logic_error);
+            const char * operator->() const throw (std::logic_error);
+            bool operator!=(const jpr::String::const_iterator& other) const;
+            bool operator==(const jpr::String::const_iterator& other) const;
+
+        private:
+            const String & m_string;
+            size_t m_index;
+        }; // class String::const_iterator
+
+
         // acquiring iterators
         iterator begin();
         iterator end();
+        // const_iterators
+        const_iterator begin() const;
+        const_iterator end() const;
+
 
     private:
         size_t m_bufsize, m_used;

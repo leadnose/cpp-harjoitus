@@ -272,6 +272,15 @@ void iterator_test3()
     throw std::logic_error("dereferencing the iterator should've failed");
 }
 
+void insert_test1()
+{
+    String str = "to be question";
+    const String str2 = "the ";
+    const String cmp = "to be the question";
+
+    str.insert(6,str2);
+    check_equal(str, cmp);
+}
 
 
 #define TEST(f) std::make_pair(f, #f)
@@ -293,7 +302,9 @@ std::vector<std::pair<testfun, std::string>> tests =
      TEST(input_operator_test),
      TEST(iterator_test1),
      TEST(iterator_test2),
-     TEST(iterator_test3)};
+     TEST(iterator_test3),
+     TEST(insert_test1)
+    };
 
 #undef TEST
 

@@ -319,13 +319,65 @@ namespace jpr {
 
     bool String::iterator::operator!=(const String::iterator& other) const
     {
-        return &*(*this) != &*other;
+        return !((*this) == other);
     }
 
     bool String::iterator::operator==(const String::iterator& other) const
     {
-        return &*(*this) == &*other;
+        return (&this->m_string == &other.m_string) && (this->m_index == other.m_index);
     }
+
+    // const_iterator implementation
+    
+    String::const_iterator::const_iterator(const String & string, size_t index)
+        : m_string(string), m_index(index)
+    {}
+    
+    String::const_iterator String::const_iterator::operator++() throw (std::logic_error)
+    {
+        if (m_index >= m_string.m_used) {
+            throw std::logic_error("const_iterator out of bounds");
+        } else {
+            m_index++;
+            return *this;
+        }
+    }
+
+    String::const_iterator String::const_iterator::operator++(int) throw (std::logic_error)
+    {
+        String::const_iterator ans = *this;
+        ++(*this);
+        return ans;
+    }
+    
+    const char & String::const_iterator::operator*() const throw (std::logic_error)
+    {
+        if (m_index >= m_string.m_used) {
+            throw std::logic_error("const_iterator out of bounds");
+        } else {
+            return m_string[m_index];
+        }
+    }
+
+    const char * String::const_iterator::operator->() const throw (std::logic_error)
+    {
+        if (m_index >= m_string.m_used) {
+            throw std::logic_error("const_iterator out of bounds");
+        } else {
+            return &m_string[m_index];
+        }
+    }
+
+    bool String::const_iterator::operator!=(const String::const_iterator& other) const
+    {
+        return !((*this) == other);
+    }
+
+    bool String::const_iterator::operator==(const String::const_iterator& other) const
+    {
+        return (&this->m_string == &other.m_string) && (this->m_index == other.m_index);
+    }
+
 
 
     String::iterator String::begin()
@@ -340,6 +392,40 @@ namespace jpr {
         return String::iterator(*this, this->m_used);
     }
 
+    String::const_iterator String::begin() const
+    {
+        CHECKED(*this);
+        return String::const_iterator(*this, 0);
+    }
+    
+    String::const_iterator String::end() const
+    {
+        CHECKED(*this);
+        return String::const_iterator(*this, this->m_used);
+    }
+    
 
+    String & String::insert(size_t pos1, const String & str)
+    {
+        CHECKED(*this);
+
+        String tmp;
+
+        for (size_t i = 0; i < pos1; ++i) {
+            tmp.push_back(m_buf[i]);
+        }
+
+        for (auto it = str.begin(); it != str.end(); ++it) {
+            tmp.push_back(*it);
+        }
+
+        for (size_t i = pos1; i < m_used; ++i) {
+            tmp.push_back(m_buf[i]);
+        }
+
+        *this = tmp;
+
+        return *this;
+    }
 
 }
