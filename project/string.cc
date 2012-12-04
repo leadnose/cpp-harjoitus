@@ -482,7 +482,7 @@ namespace jpr {
 
         String tmp;
 
-        for (size_t i = 0; i < pos1; ++i) {
+        for (size_t i = 0; i < pos1 && i < m_used; ++i) {
             tmp.push_back(m_buf[i]);
         }
 
