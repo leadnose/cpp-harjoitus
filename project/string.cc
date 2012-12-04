@@ -372,7 +372,19 @@ namespace jpr {
         ++(*this);
         return ans;
     }
-    
+
+    String::const_iterator String::const_iterator::operator+(size_t n) throw (std::logic_error)
+    {
+        String::const_iterator ans = *this;
+        if (m_index + n >= m_string->m_used) {
+            throw std::logic_error("iterator would go out of bounds");
+        } else {
+            ans.m_index += n;
+            return ans;
+        }
+    }
+
+
     const char & String::const_iterator::operator*() const throw (std::logic_error)
     {
         if (m_index >= m_string->m_used) {
@@ -499,5 +511,14 @@ namespace jpr {
         tmp.push_back(c);
         insert(p.m_index, tmp);
         return p;
+    }
+
+    void String::insert(iterator p, size_t n, char c)
+    {
+        String tmp;
+        for (size_t i = 0; i < n; ++i) {
+            tmp.push_back(c);
+        }
+        insert(p.m_index, tmp);
     }
 }

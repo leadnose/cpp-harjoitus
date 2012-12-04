@@ -377,6 +377,48 @@ void insert_test6()
     check_equal(str, String("to be, not to be: that is the question"));
 }
 
+static
+void insert_test7()
+{
+    String str = "to be question";
+    String str2 = "the ";
+    String str3 = "or not to be";
+    String::iterator it = str.begin();
+
+
+   str.insert(6,str2);                 // to be (the )question
+   str.insert(6,str3,3,4);             // to be (not )the question
+   str.insert(10,"that is cool",8);    // to be not (that is )the question
+   str.insert(10,"to be ");            // to be not (to be )that is the question
+   str.insert(15,1,':');               // to be not to be(:) that is the question
+   it = str.insert(str.begin()+5,','); // to be(,) not to be: that is the question
+   str.insert (str.end(),3,'.');       // to be, not to be: that is the question(...)
+
+   check_equal(str, String("to be, not to be: that is the question..."));
+}
+
+static
+void insert_test8()
+{
+    String str = "to be question";
+    String str2 = "the ";
+    String str3 = "or not to be";
+    String::iterator it = str.begin();
+
+
+    str.insert(6,str2);                 // to be (the )question
+    str.insert(6,str3,3,4);             // to be (not )the question
+    str.insert(10,"that is cool",8);    // to be not (that is )the question
+    str.insert(10,"to be ");            // to be not (to be )that is the question
+    str.insert(15,1,':');               // to be not to be(:) that is the question
+    it = str.insert(str.begin()+5,','); // to be(,) not to be: that is the question
+    str.insert (str.end(),3,'.');       // to be, not to be: that is the question(...)
+    str.insert (it+2,str3.begin(),str3.begin()+3); // (or )
+
+    check_equal(str, String("to be, or not to be: that is the question..."));
+}
+
+
 #define TEST(f) std::make_pair(f, #f)
 
 std::vector<std::pair<testfun, std::string>> tests =
@@ -405,6 +447,8 @@ std::vector<std::pair<testfun, std::string>> tests =
      TEST(insert_test4),
      TEST(insert_test5),
      TEST(insert_test6),
+     TEST(insert_test7),
+     TEST(insert_test8),
     };
 
 #undef TEST

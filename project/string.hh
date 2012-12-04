@@ -72,10 +72,19 @@ namespace jpr
         String::iterator insert (String::iterator p, char c);
         
         // Inserts a string formed by the repetition of character c, n times, at the position referred by iterator p.
-        // void insert ( iterator p, size_t n, char c );
+         void insert(iterator p, size_t n, char c);
         
-        // Inserts at the internal position referred by p the content made up of the characters that go from the element referred by iterator first to the element right before the one referred by iterator last. 
-        // template<class InputIterator> void insert (iterator p, InputIterator first, InputIterator last);
+        // Inserts at the internal position referred by p the content made up of the characters that go from the element referred by iterator first to the element right before the one referred by iterator last.
+
+        // defined here because it's a template
+        template<class InputIterator> void insert (String::iterator p, InputIterator first, InputIterator last)
+        {
+            String tmp;
+            for (InputIterator it = first; it != last; ++it) {
+                tmp.push_back(*it);
+            }
+            insert(p.m_index, tmp);
+        }
         
 
         class iterator
@@ -115,6 +124,7 @@ namespace jpr
             // that you're doing something that doesn't make sense
             const_iterator operator++() throw (std::logic_error);
             const_iterator operator++(int) throw (std::logic_error);
+            const_iterator operator+(size_t n) throw (std::logic_error);
             const char & operator*() const throw (std::logic_error);
             const char * operator->() const throw (std::logic_error);
             bool operator!=(const jpr::String::const_iterator& other) const;
