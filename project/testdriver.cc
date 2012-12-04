@@ -405,7 +405,6 @@ void insert_test8()
     String str3 = "or not to be";
     String::iterator it = str.begin();
 
-
     str.insert(6,str2);                 // to be (the )question
     str.insert(6,str3,3,4);             // to be (not )the question
     str.insert(10,"that is cool",8);    // to be not (that is )the question
@@ -418,6 +417,43 @@ void insert_test8()
     check_equal(str, String("to be, or not to be: that is the question..."));
 }
 
+static
+void erase_test1()
+{
+    String str ("This is an example phrase.");
+    String::iterator it = str.begin();
+
+    str.erase (10,8);
+    check_equal(str, String("This is an phrase."));
+}
+
+static
+void erase_test2()
+{
+    String str ("This is an example phrase.");
+    String::iterator it = str.begin();
+
+    str.erase (10,8);
+    it = str.begin()+9;
+    str.erase(it);
+    check_equal(str, String("This is a phrase."));
+}
+
+static
+void erase_test3()
+{
+    String str ("This is an example phrase.");
+    String::iterator it = str.begin();
+
+
+    str.erase (10,8);
+    check_equal(str, String("This is an phrase."));
+    it = str.begin()+9;
+    str.erase (it);
+    check_equal(str, String("This is a phrase."));
+    str.erase (str.begin()+5, str.end()-7);
+    check_equal(str, String("This phrase."));
+}
 
 #define TEST(f) std::make_pair(f, #f)
 
@@ -449,6 +485,9 @@ std::vector<std::pair<testfun, std::string>> tests =
      TEST(insert_test6),
      TEST(insert_test7),
      TEST(insert_test8),
+     TEST(erase_test1),
+     TEST(erase_test2),
+     TEST(erase_test3),
     };
 
 #undef TEST

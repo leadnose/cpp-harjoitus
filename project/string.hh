@@ -85,6 +85,20 @@ namespace jpr
             }
             insert(p.m_index, tmp);
         }
+        // see http://www.cplusplus.com/reference/string/string/npos/
+        static const size_t npos = -1;
+
+        // erase (from http://www.cplusplus.com/reference/string/string/erase/ )
+
+        //     Erases a sequence of n characters starting at position pos. Notice that both parameters are optional: with only one argument, the function deletes everything from position pos forwards, and with no arguments, the function deletes the entire string, like member clear.
+        String & erase ( size_t pos = 0, size_t n = npos );
+
+        // Erases the character referred by the iterator position. Only one character is affected.
+        String::iterator erase (String::iterator position);
+
+        // Erases all the characters between first and last. 
+        String::iterator erase (String::iterator first, String::iterator last);
+
         
 
         class iterator
@@ -102,6 +116,7 @@ namespace jpr
             iterator operator++() throw (std::logic_error);
             iterator operator++(int) throw (std::logic_error);
             iterator operator+(size_t n) throw (std::logic_error);
+            iterator operator-(size_t n) throw (std::logic_error);
             char & operator*() const throw (std::logic_error);
             char * operator->() const throw (std::logic_error);
             bool operator!=(const jpr::String::iterator& other) const;
@@ -125,6 +140,7 @@ namespace jpr
             const_iterator operator++() throw (std::logic_error);
             const_iterator operator++(int) throw (std::logic_error);
             const_iterator operator+(size_t n) throw (std::logic_error);
+            const_iterator operator-(size_t n) throw (std::logic_error);
             const char & operator*() const throw (std::logic_error);
             const char * operator->() const throw (std::logic_error);
             bool operator!=(const jpr::String::const_iterator& other) const;

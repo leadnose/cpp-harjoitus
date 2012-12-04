@@ -320,7 +320,19 @@ namespace jpr {
             return ans;
         }
     }
+
+    String::iterator String::iterator::operator-(size_t n) throw (std::logic_error)
+    {
+        String::iterator ans = *this;
+        if (m_index < n) {
+            throw std::logic_error("iterator would go out of bounds");
+        } else {
+            ans.m_index -= n;
+            return ans;
+        }
+    }
     
+
 
     char & String::iterator::operator*() const throw (std::logic_error)
     {
@@ -520,5 +532,33 @@ namespace jpr {
             tmp.push_back(c);
         }
         insert(p.m_index, tmp);
+    }
+
+    String & String::erase(size_t pos, size_t n)
+    {
+        String tmp;
+
+        for (size_t i = 0; i < pos && i < m_used; ++i) {
+            tmp.push_back((*this)[i]);
+        }
+
+        for (size_t i = pos+n; i < m_used; ++i) {
+            tmp.push_back((*this)[i]);
+        }
+
+        *this = tmp;
+        return *this;
+    }
+
+    String::iterator String::erase(String::iterator position)
+    {
+        erase(position.m_index, 1);
+        return String::iterator(this, position.m_index);
+    }
+
+    String::iterator String::erase(String::iterator first, String::iterator last)
+    {
+        erase(first.m_index, last.m_index - first.m_index);
+        return String::iterator(this, first.m_index);
     }
 }
