@@ -48,6 +48,32 @@ namespace jpr
         // swap
         void swap(String & other);
 
+        // Various inserts (from http://www.cplusplus.com/reference/string/string/insert/ )
+        // Inserts a copy of the entire string object str at character position pos1.
+        String& insert ( size_t pos1, const String& str );
+        
+        // Inserts a copy of a substring of str at character position pos1. The substring is the portion of str that begins at the character position pos2 and takes up to n characters (it takes less than n if the end of str is reached before).
+        String& insert ( size_t pos1, const String& str, size_t pos2, size_t n );
+        
+        // Inserts at the character position pos1, a copy of the string formed by the first n characters in the array of characters pointed by s.
+        String& insert ( size_t pos1, const char * s, size_t n );
+        
+        // Inserts at character position pos1, a copy of the string formed by the null-terminated character sequence (C string) pointed by s. The length of this character sequence is determined by the first ocurrence of a null character (as determined by traits.length(s)).
+        String& insert ( size_t pos1, const char * s );
+        
+        // Inserts a string formed by a repetition of character c, n times, at the character position pos1.
+        String& insert ( size_t pos1, size_t n, char c );
+        
+        // Inserts a copy of character c at the position referred by iterator p and returns an iterator referring to this position where it has been inserted.
+        iterator insert ( iterator p, char c );
+        
+        // Inserts a string formed by the repetition of character c, n times, at the position referred by iterator p.
+        void insert ( iterator p, size_t n, char c );
+        
+        // Inserts at the internal position referred by p the content made up of the characters that go from the element referred by iterator first to the element right before the one referred by iterator last. 
+        template<class InputIterator> void insert (iterator p, InputIterator first, InputIterator last);
+        
+
         class iterator
         {
             friend class String; // so that String may use the ctor
