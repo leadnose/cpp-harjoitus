@@ -9,6 +9,8 @@
 
 namespace jpr {
 
+
+
     InvalidStringException::InvalidStringException(const char *msg)
         : m_msg(msg) // use only statically allocated strings in exceptions to keep things simple
     {
@@ -19,7 +21,57 @@ namespace jpr {
         return m_msg;
     }
 
-    void String::check() throw (InvalidStringException)
+    // a helper class to check the invariants during member functions
+    // it is intended to be used by constructing an instance at the beginning (or near the beginning, after parameter checks) of
+    // every member function of String, and it will check that the invariants are held both before and after the call
+    class StringChecker
+    {
+    public:
+        // the constructor takes a reference to jpr::String and simply calls its .check() method
+        StringChecker(const String & s, const char *filename, int line)
+            : m_str(s), m_filename(filename), m_line(line)
+        {
+            try {
+                m_str.check();
+                std::cerr << "OK" << std::endl;
+            } catch (const InvalidStringException & e) {
+                std::cerr << "ERROR: invariant failed on entry in file " << m_filename << " on line " << m_line << std::endl;
+            }
+        }
+        
+        // the destructor checks the invariant again, but instead of letting the possible exception
+        // be thrown through (you can't throw from destructor), a message is written to std::cerr, prefixed with "ERROR:"
+        // and terminate() is called
+        ~StringChecker() throw()
+        {
+            try {
+                m_str.check(); // may throw
+            } catch (const InvalidStringException & e) {
+                std::cerr << "ERROR: invariant failed on exit in file " << m_filename << " on line " << m_line << std::endl;
+                std::terminate();
+            } catch (...) { // catch all other exceptions too
+                std::cerr << "ERROR: unknown exception in ~StringChecker()" << std::endl;
+                std::terminate();
+            }
+        }
+
+    private:
+        const String & m_str;
+        const char *m_filename;
+        int m_line;
+        
+    };
+
+// helper macro to make using StringChecker more convenient
+#ifdef DEBUG        
+#define CHECKED StringChecker checker (*this, __FILE__, __LINE__)
+#endif
+
+#ifndef DEBUG
+#define CHECKED ;        
+#endif
+
+    void String::check() const throw (InvalidStringException) 
     {
         if (m_bufsize > 0) {
         
@@ -66,11 +118,13 @@ namespace jpr {
 
     size_t String::size() const
     {
+        CHECKED;
         return m_used;
     }
 
     String & String::operator= (const String & other)
     {
+        CHECKED;
         if (this != &other) {
             char * new_buf = new char[other.m_bufsize];
             std::copy(other.m_buf, other.m_buf + other.m_bufsize, new_buf);
@@ -87,6 +141,7 @@ namespace jpr {
 
     bool String::operator==(const String& other) const
     {
+        CHECKED;
         if (other.m_used != m_used) {
             return false;
         } else {
@@ -101,6 +156,7 @@ namespace jpr {
 
     bool String::operator!=(const String& other) const
     {
+        CHECKED;
         return !(*this == other);
     }
 
@@ -132,6 +188,7 @@ namespace jpr {
 
     char & String::operator[](size_t index) const
     {
+        CHECKED;
         if (index >= m_used) { // don't need to check for index < 0 because size_t is always >= 0
             throw std::out_of_range("index too large");
         } else {
@@ -141,7 +198,7 @@ namespace jpr {
 
     void String::push_back(char c)
     {
-
+        CHECKED;
         if (m_bufsize == 0) {
             m_bufsize++;
             m_buf = new char[m_bufsize];
@@ -167,6 +224,7 @@ namespace jpr {
 
     void String::pop_back()
     {
+        CHECKED;
         if (m_used == 0) {
             throw std::logic_error("tried to pop_back() on an empty string");
         } else {
@@ -177,6 +235,7 @@ namespace jpr {
 
     void String::swap(String & other)
     {
+        CHECKED;
         std::swap(m_bufsize, other.m_bufsize);
         std::swap(m_used,    other.m_used);
         std::swap(m_buf,     other.m_buf);
@@ -192,7 +251,6 @@ namespace jpr {
 
     std::istream & operator>>(std::istream & is, String & s)
     {
-
         s = String(); // clear the string like std::string's operator>> does
 
         char ch;
@@ -268,11 +326,13 @@ namespace jpr {
 
     String::iterator String::begin()
     {
+        CHECKED;
         return String::iterator(*this, 0);
     }
     
     String::iterator String::end()
     {
+        CHECKED;
         return String::iterator(*this, this->m_used);
     }
 

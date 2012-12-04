@@ -16,7 +16,7 @@ namespace jpr
     class String {
     public:
         // validity-check
-        void check() throw (InvalidStringException);
+        void check() const throw (InvalidStringException);
         // for debugging
         void dump_state(std::ostream &os = std::cerr);
         // default constructor
