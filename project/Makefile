@@ -11,7 +11,7 @@ string.o: string.hh string.cc
 	$(CC) $(CFLAGS) -c -o string.o string.cc
 
 testrun: testdriver
-	./testdriver
+	./testdriver 2> test.log
 
 clean:
 	rm -f testdriver string.o

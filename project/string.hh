@@ -60,9 +60,10 @@ namespace jpr
             // that you're doing something that doesn't make sense
             iterator operator++() throw (std::logic_error);
             iterator operator++(int) throw (std::logic_error);
-            char & operator*() throw (std::logic_error);
-            char * operator->() throw (std::logic_error);
-            bool operator!=(const jpr::String::iterator& other);
+            char & operator*() const throw (std::logic_error);
+            char * operator->() const throw (std::logic_error);
+            bool operator!=(const jpr::String::iterator& other) const;
+            bool operator==(const jpr::String::iterator& other) const;
 
         private:
             String & m_string;

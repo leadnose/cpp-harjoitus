@@ -301,19 +301,28 @@ int main()
 {
     size_t successes = 0, failures = 0;
 
+    std::vector<std::string> failed_test_names;
+
     for (size_t i = 0; i < tests.size(); ++i) {
         try {
-            std::cout << "running test " << i+1 << " of " << tests.size() << ": " << tests[i].second << "... ";
-            tests[i].first();
+            std::cout << "running test " << i+1 << " of " << tests.size() << ": " << tests.at(i).second << "... ";
+            tests.at(i).first();
             std::cout << " ok" << std::endl;
             successes++;
         } catch (const std::exception &e) {
             std::cout << "test failed: " << e.what() << std::endl;
+            failed_test_names.push_back(tests[i].second);
             failures++;
         }
     }
 
     std::cout << "Ran " << tests.size() << " tests, " << successes << " successes, " << failures << " failures." << std::endl;
+
+    std::cout << "Failed tests were:" << std::endl;
+
+    for (size_t i = 0; i < failed_test_names.size(); ++i) {
+        std::cout << failed_test_names.at(i) << std::endl;
+    }
 
     if (failures) {
         exit(EXIT_FAILURE);

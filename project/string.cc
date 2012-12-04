@@ -33,9 +33,9 @@ namespace jpr {
         {
             try {
                 m_str.check();
-                std::cerr << "OK" << std::endl;
+                std::cerr << "ENTRY OK" << std::endl;
             } catch (const InvalidStringException & e) {
-                std::cerr << "ERROR: invariant failed on entry in file " << m_filename << " on line " << m_line << std::endl;
+                std::cerr << "ERROR: invariant failed on entry in file " << m_filename << ":" << m_line << std::endl;
             }
         }
         
@@ -46,8 +46,9 @@ namespace jpr {
         {
             try {
                 m_str.check(); // may throw
+                std::cerr << "EXIT OK" << std::endl;
             } catch (const InvalidStringException & e) {
-                std::cerr << "ERROR: invariant failed on exit in file " << m_filename << " on line " << m_line << std::endl;
+                std::cerr << "ERROR: invariant failed on exit in file " << m_filename << ":" << m_line << std::endl;
                 std::terminate();
             } catch (...) { // catch all other exceptions too
                 std::cerr << "ERROR: unknown exception in ~StringChecker()" << std::endl;
@@ -64,11 +65,11 @@ namespace jpr {
 
 // helper macro to make using StringChecker more convenient
 #ifdef DEBUG        
-#define CHECKED StringChecker checker (*this, __FILE__, __LINE__)
+#define CHECKED(x) StringChecker checker (x, __FILE__, __LINE__)
 #endif
 
 #ifndef DEBUG
-#define CHECKED ;        
+#define CHECKED(x) ;        
 #endif
 
     void String::check() const throw (InvalidStringException) 
@@ -118,14 +119,14 @@ namespace jpr {
 
     size_t String::size() const
     {
-        CHECKED;
+        CHECKED(*this);
         return m_used;
     }
 
     String & String::operator= (const String & other)
     {
-        CHECKED;
-        if (this != &other) {
+        CHECKED(*this);
+        if (this != &other && other.m_buf) {
             char * new_buf = new char[other.m_bufsize];
             std::copy(other.m_buf, other.m_buf + other.m_bufsize, new_buf);
 
@@ -141,7 +142,7 @@ namespace jpr {
 
     bool String::operator==(const String& other) const
     {
-        CHECKED;
+        CHECKED(*this);
         if (other.m_used != m_used) {
             return false;
         } else {
@@ -156,7 +157,7 @@ namespace jpr {
 
     bool String::operator!=(const String& other) const
     {
-        CHECKED;
+        CHECKED(*this);
         return !(*this == other);
     }
 
@@ -188,7 +189,7 @@ namespace jpr {
 
     char & String::operator[](size_t index) const
     {
-        CHECKED;
+        CHECKED(*this);
         if (index >= m_used) { // don't need to check for index < 0 because size_t is always >= 0
             throw std::out_of_range("index too large");
         } else {
@@ -198,7 +199,7 @@ namespace jpr {
 
     void String::push_back(char c)
     {
-        CHECKED;
+        CHECKED(*this);
         if (m_bufsize == 0) {
             m_bufsize++;
             m_buf = new char[m_bufsize];
@@ -224,7 +225,7 @@ namespace jpr {
 
     void String::pop_back()
     {
-        CHECKED;
+        CHECKED(*this);
         if (m_used == 0) {
             throw std::logic_error("tried to pop_back() on an empty string");
         } else {
@@ -235,7 +236,7 @@ namespace jpr {
 
     void String::swap(String & other)
     {
-        CHECKED;
+        CHECKED(*this);
         std::swap(m_bufsize, other.m_bufsize);
         std::swap(m_used,    other.m_used);
         std::swap(m_buf,     other.m_buf);
@@ -243,6 +244,7 @@ namespace jpr {
         
     std::ostream & operator<<(std::ostream & os, const String & s)
     {
+        CHECKED(s);
         for (size_t i = 0; i < s.m_used; i++) {
             os << s.m_buf[i];
         }
@@ -251,6 +253,8 @@ namespace jpr {
 
     std::istream & operator>>(std::istream & is, String & s)
     {
+        CHECKED(s);
+
         s = String(); // clear the string like std::string's operator>> does
 
         char ch;
@@ -295,7 +299,7 @@ namespace jpr {
         return ans;
     }
     
-    char & String::iterator::operator*() throw (std::logic_error)
+    char & String::iterator::operator*() const throw (std::logic_error)
     {
         if (m_index >= m_string.m_used) {
             throw std::logic_error("iterator out of bounds");
@@ -304,7 +308,7 @@ namespace jpr {
         }
     }
 
-    char * String::iterator::operator->() throw (std::logic_error)
+    char * String::iterator::operator->() const throw (std::logic_error)
     {
         if (m_index >= m_string.m_used) {
             throw std::logic_error("iterator out of bounds");
@@ -313,26 +317,26 @@ namespace jpr {
         }
     }
 
-    bool String::iterator::operator!=(const String::iterator& other)
+    bool String::iterator::operator!=(const String::iterator& other) const
     {
-        // iterators are equal if the addressess of the pointed-to objects are the same
-        if (&m_string == &other.m_string) {
-            return m_index != other.m_index;
-        } else {
-            return true;
-        }
+        return &*(*this) != &*other;
+    }
+
+    bool String::iterator::operator==(const String::iterator& other) const
+    {
+        return &*(*this) == &*other;
     }
 
 
     String::iterator String::begin()
     {
-        CHECKED;
+        CHECKED(*this);
         return String::iterator(*this, 0);
     }
     
     String::iterator String::end()
     {
-        CHECKED;
+        CHECKED(*this);
         return String::iterator(*this, this->m_used);
     }
 
