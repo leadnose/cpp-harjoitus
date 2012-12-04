@@ -397,6 +397,18 @@ namespace jpr {
     }
 
 
+    String::const_iterator String::const_iterator::operator-(size_t n) throw (std::logic_error)
+    {
+        String::const_iterator ans = *this;
+        if (m_index < n) {
+            throw std::logic_error("iterator would go out of bounds");
+        } else {
+            ans.m_index -= n;
+            return ans;
+        }
+    }
+
+
     const char & String::const_iterator::operator*() const throw (std::logic_error)
     {
         if (m_index >= m_string->m_used) {
