@@ -443,9 +443,19 @@ namespace jpr {
     String & String::insert (size_t pos1, const String & str, size_t pos2, size_t n)
     {
         CHECKED(*this);
-        String substring = str.substring(pos2, pos2+n);
-        
-        return insert(pos1, substring);
+        return insert(pos1, str.substring(pos2, pos2+n));
+    }
+
+    String & String::insert ( size_t pos1, const char * s, size_t n )
+    {
+        CHECKED(*this);
+        return insert(pos1, String(s).substring(0, n));
+    }
+
+    String & String::insert(size_t pos1, const char * s)
+    {
+        CHECKED(*this);
+        return insert(pos1, String(s));
     }
 
 }

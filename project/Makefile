@@ -13,5 +13,8 @@ string.o: string.hh string.cc
 testrun: testdriver
 	./testdriver 2> test.log
 
+leakcheck: testdriver
+	valgrind --leak-check=full --show-reachable=yes ./testdriver 2> test.log
+
 clean:
 	rm -f testdriver string.o

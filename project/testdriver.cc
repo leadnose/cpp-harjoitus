@@ -313,6 +313,35 @@ void insert_test2()
     check_equal(str, cmp);
 }
 
+static
+void insert_test3()
+{
+    String str = "to be question";
+    String str2 = "the ";
+    String str3 = "or not to be";
+    
+    str.insert(6,str2);                 // to be (the )question
+    str.insert(6,str3,3,4);             // to be (not )the question
+    str.insert(10,"that is cool",8);    // to be not (that is )the question
+
+    check_equal(str, String("to be not that is the question"));
+
+}
+
+static
+void insert_test4()
+{
+    String str = "to be question";
+    String str2 = "the ";
+    String str3 = "or not to be";
+
+    str.insert(6,str2);                 // to be (the )question
+    str.insert(6,str3,3,4);             // to be (not )the question
+    str.insert(10,"that is cool",8);    // to be not (that is )the question
+    str.insert(10,"to be ");            // to be not (to be )that is the question
+
+    check_equal(str, String("to be not to be that is the question"));
+}
 
 #define TEST(f) std::make_pair(f, #f)
 
@@ -338,6 +367,8 @@ std::vector<std::pair<testfun, std::string>> tests =
      TEST(substring_test),
      TEST(insert_test1),
      TEST(insert_test2),
+     TEST(insert_test3),
+     TEST(insert_test4),
     };
 
 #undef TEST

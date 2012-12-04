@@ -2,5 +2,6 @@
  - getting it to compile
  - obscure messages from g++
  - keeping track of memory correctly
- - constness
+ - constness in general and in iterators in particular
+ - io-operations because of statefulness
  
