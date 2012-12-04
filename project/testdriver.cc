@@ -272,6 +272,17 @@ void iterator_test3()
     throw std::logic_error("dereferencing the iterator should've failed");
 }
 
+static
+void substring_test()
+{
+    String s = "alavilla mailla hallan vaara";
+    const String s2 = s.substring(0, strlen("alavilla"));
+    const String cmp = "alavilla";
+
+    check_equal(s2, cmp);
+}
+
+static
 void insert_test1()
 {
     String str = "to be question";
@@ -279,6 +290,20 @@ void insert_test1()
     const String cmp = "to be the question";
 
     str.insert(6,str2);
+    check_equal(str, cmp);
+}
+
+static
+void insert_test2()
+{
+    String str = "to be question";
+    String str2 = "the ";
+    String str3 = "or not to be";
+    String cmp = "to be not the question";
+    
+    str.insert(6, str2);                 // to be (the )question
+    str.insert(6, str3, 3, 4);             // to be (not )the question
+
     check_equal(str, cmp);
 }
 
@@ -303,7 +328,9 @@ std::vector<std::pair<testfun, std::string>> tests =
      TEST(iterator_test1),
      TEST(iterator_test2),
      TEST(iterator_test3),
-     TEST(insert_test1)
+     TEST(substring_test),
+     TEST(insert_test1),
+     TEST(insert_test2),
     };
 
 #undef TEST

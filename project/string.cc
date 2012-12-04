@@ -403,7 +403,19 @@ namespace jpr {
         CHECKED(*this);
         return String::const_iterator(*this, this->m_used);
     }
-    
+
+    String String::substring(size_t begin, size_t end) const
+    {
+        CHECKED(*this);
+
+        String ans;
+
+        for (size_t i = begin; i < end && i < m_used; ++i) {
+            ans.push_back((*this)[i]);
+        }
+
+        return ans;
+    }
 
     String & String::insert(size_t pos1, const String & str)
     {
@@ -426,6 +438,14 @@ namespace jpr {
         *this = tmp;
 
         return *this;
+    }
+
+    String & String::insert (size_t pos1, const String & str, size_t pos2, size_t n)
+    {
+        CHECKED(*this);
+        String substring = str.substring(pos2, pos2+n);
+        
+        return insert(pos1, substring);
     }
 
 }

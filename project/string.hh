@@ -47,16 +47,18 @@ namespace jpr
         void pop_back();
         // swap
         void swap(String & other);
+        // substring (not required by the spec, but still nice to have)
+        String substring(size_t begin, size_t end) const;
 
         // Various inserts (from http://www.cplusplus.com/reference/string/string/insert/ )
         // Inserts a copy of the entire string object str at character position pos1.
-        String& insert ( size_t pos1, const String& str );
+        String & insert ( size_t pos1, const String & str );
         
         // Inserts a copy of a substring of str at character position pos1. The substring is the portion of str that begins at the character position pos2 and takes up to n characters (it takes less than n if the end of str is reached before).
-        String& insert ( size_t pos1, const String& str, size_t pos2, size_t n );
+        String & insert ( size_t pos1, const String & str, size_t pos2, size_t n );
         
         // Inserts at the character position pos1, a copy of the string formed by the first n characters in the array of characters pointed by s.
-        String& insert ( size_t pos1, const char * s, size_t n );
+        String & insert ( size_t pos1, const char * s, size_t n );
         
         // Inserts at character position pos1, a copy of the string formed by the null-terminated character sequence (C string) pointed by s. The length of this character sequence is determined by the first ocurrence of a null character (as determined by traits.length(s)).
         String& insert ( size_t pos1, const char * s );
