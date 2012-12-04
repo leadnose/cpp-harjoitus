@@ -12,30 +12,6 @@ typedef void(*testfun)();
 
 using jpr::String;
 
-static
-void default_constructor_test()
-{
-    String s;
-    s.check();
-    s.dump_state();
-}
-
-static
-void cstring_constructor_test1()
-{
-    String s("asdf");
-    s.check();
-    s.dump_state();
-}
-
-static
-void cstring_constructor_test2()
-{
-    String s(0);
-    s.check();
-    s.dump_state();
-}
-
 template <typename T>
 void check_equal(const T& t1, const T& t2)
 {
@@ -54,6 +30,36 @@ void check_non_equal(const T& t1, const T& t2)
     } else {
         throw std::logic_error("check_non_equal() failed");
     }
+}
+
+static
+void default_constructor_test()
+{
+    String s;
+    s.dump_state();
+}
+
+static
+void cstring_constructor_test1()
+{
+    String s("asdf");
+    s.dump_state();
+}
+
+static
+void cstring_constructor_test2()
+{
+    String s(0);
+    s.dump_state();
+}
+
+static
+void copy_constructor_test()
+{
+    String s1 = "asdf";
+    String s2 = s1;
+
+    check_equal(s1, s2);
 }
 
 static
@@ -314,6 +320,7 @@ std::vector<std::pair<testfun, std::string>> tests =
     {TEST(default_constructor_test),
      TEST(cstring_constructor_test1),
      TEST(cstring_constructor_test2),
+     TEST(copy_constructor_test),
      TEST(size_test),
      TEST(equality_test1),
      TEST(equality_test2),
