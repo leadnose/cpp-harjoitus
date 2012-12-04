@@ -64,10 +64,12 @@ namespace jpr
         String& insert ( size_t pos1, const char * s );
         
         // Inserts a string formed by a repetition of character c, n times, at the character position pos1.
-        String& insert ( size_t pos1, size_t n, char c );
+        String & insert ( size_t pos1, size_t n, char c );
         
+        class iterator; // forward declaration 
+
         // Inserts a copy of character c at the position referred by iterator p and returns an iterator referring to this position where it has been inserted.
-        // iterator insert ( iterator p, char c );
+        String::iterator insert (String::iterator p, char c);
         
         // Inserts a string formed by the repetition of character c, n times, at the position referred by iterator p.
         // void insert ( iterator p, size_t n, char c );
@@ -82,19 +84,22 @@ namespace jpr
             
         private:
             // this can be called from String::begin(), ::end() etc. but arbitrary indexes can't be used
-            iterator(String & string, size_t index); // TODO: make it so that the type of index is signed, and that it's maximum positive value is >= maxvalue of size_t?
+            iterator(String * string, size_t index); // TODO: make it so that the type of index is signed, and that it's maximum positive value is >= maxvalue of size_t?
         public:
+            iterator& operator=(const iterator & other);
+
             // all the operations will throw a std::logic_error if they detect
             // that you're doing something that doesn't make sense
             iterator operator++() throw (std::logic_error);
             iterator operator++(int) throw (std::logic_error);
+            iterator operator+(size_t n) throw (std::logic_error);
             char & operator*() const throw (std::logic_error);
             char * operator->() const throw (std::logic_error);
             bool operator!=(const jpr::String::iterator& other) const;
             bool operator==(const jpr::String::iterator& other) const;
 
         private:
-            String & m_string;
+            String * m_string;
             size_t m_index;
         }; // class String::iterator
 
@@ -104,7 +109,7 @@ namespace jpr
             
         private:
             // this can be called from String::begin(), ::end() etc. but arbitrary indexes can't be used
-            const_iterator(const String & string, size_t index); // TODO: make it so that the type of index is signed, and that it's maximum positive value is >= maxvalue of size_t?
+            const_iterator(const String * string, size_t index); // TODO: make it so that the type of index is signed, and that it's maximum positive value is >= maxvalue of size_t?
         public:
             // all the operations will throw a std::logic_error if they detect
             // that you're doing something that doesn't make sense
@@ -116,7 +121,7 @@ namespace jpr
             bool operator==(const jpr::String::const_iterator& other) const;
 
         private:
-            const String & m_string;
+            const String * m_string;
             size_t m_index;
         }; // class String::const_iterator
 
