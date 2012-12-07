@@ -1,7 +1,7 @@
 # CC = clang++
 # CFLAGS = -g -Wall -Wextra -Werror
 CC = g++
-CFLAGS = -g -Wall -Wextra -Werror --std=c++0x -DDEBUG
+CFLAGS = -g -Wall -Wextra --std=c++0x -DDEBUG
 
 
 testdriver: testdriver.cc string.hh string.o
@@ -18,3 +18,17 @@ leakcheck: testdriver
 
 clean:
 	rm -f testdriver string.o
+	rm -rf jronkone/src jronkone/doc
+	rmdir jronkone
+
+report: report.tex
+	pdflatex report.tex
+
+zip: 
+	rm -rf jronkone/src jronkone/doc
+	rmdir jronkone
+	mkdir -p jronkone/src
+	mkdir -p jronkone/doc
+	cp *.hh *.cc jronkone/src
+	cp report.pdf jronkone/doc
+	zip jronkone jronkone/src/* jronkone/doc/*

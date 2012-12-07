@@ -11,7 +11,7 @@
 %% \usepackage{hyperref}
 
 
-\title{C++ project report}
+\title{C++ course project report}
 \author{Janne Ronkonen}
 \date{07 December 2012}
 
@@ -22,6 +22,14 @@
 \setcounter{tocdepth}{3}
 %% \tableofcontents
 \vspace*{1cm}
+
+
+\section{The problem}
+
+
+The problem was to design, implement and test a String-class with all
+the normal functionality expected from it, include iterators,
+indexing, adding and deleting characters and substrings etc. 
 
 
 \section{Design decisions}
@@ -88,5 +96,19 @@ influenced how and what I would test. I feel that one cannot truly
 write comprehensive and exacting tests for his/her own code because of
 this phenomenom, and it would be better to separate these
 responsibilities in bigger and/or more important projects.
+
+
+
+\section{Errors, limitations and shortcomings}
+
+
+\begin{itemize}
+\item{the input-operator doesn't work correctly when used with
+  std::stringstreams, but seems to work with other streams}
+\item{some of the functionality and/or code paths may not be tested}
+\item{the formatting of the code could be better}
+\item{the code could be commented better}
+\end{itemize}
+
 
 \end{document}
