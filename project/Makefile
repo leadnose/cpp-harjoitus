@@ -25,10 +25,8 @@ report: report.tex
 	pdflatex report.tex
 
 zip: 
-	rm -rf jronkone/src jronkone/doc
-	rmdir jronkone
 	mkdir -p jronkone/src
 	mkdir -p jronkone/doc
-	cp *.hh *.cc jronkone/src
+	cp *.hh *.cc Makefile jronkone/src
 	cp report.pdf jronkone/doc
 	zip jronkone jronkone/src/* jronkone/doc/*
